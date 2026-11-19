@@ -1,0 +1,8 @@
+{
+  "name": "peizhen-study",
+  "version": "1.0.0",
+  "private": true,
+  "description": "医疗陪诊顾问470题学习与复习网页",
+  "scripts": {"test": "node verify-browser.cjs", "preview": "python -m http.server 5173 --bind 127.0.0.1 --directory dist"},
+  "devDependencies": {"playwright": "^1.56.0"}
+}
