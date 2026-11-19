@@ -23,11 +23,21 @@
 
 ## GitHub Pages 发布
 
-发布来源为 GitHub Actions，配置文件为 [pages.yml](.github/workflows/pages.yml)。推送到 `main` 后会自动检查脚本并发布 `dist/` 目录。也可在 Actions 页面手动运行该工作流。
+发布来源为 **Deploy from a branch**：`gh-pages` 分支的根目录。该分支带有 `.nojekyll`，由 GitHub Pages 自带的发布流程部署，不需要自定义 Actions 工作流。
+
+源码位于 `main` 分支，网页文件位于 `dist/`。修改后，在已登录 GitHub 且安装 Python、Node.js、Git 的电脑上运行：
+
+```sh
+python publish-pages.py
+```
+
+脚本会检查 JavaScript、将 `dist/` 同步到 `gh-pages` 分支，再由 Pages 自动更新网站。无文件变化时不会创建新提交。`main` 的源码提交可正常使用 `git add`、`git commit`、`git push` 保存。
 
 - 站点：https://esplorare.github.io/peizhen-study/
 - 发布进度：https://github.com/ESPLORARE/peizhen-study/actions
 - Pages 设置：https://github.com/ESPLORARE/peizhen-study/settings/pages
+
+初次部署时，自定义 Actions 因账号账单限制无法启动，所以使用了上述 Pages 分支发布方式。
 
 网页中的资源均使用相对路径，可在 GitHub Pages 的仓库子路径下运行，无需 API 密钥、数据库或第三方 CDN。
 
