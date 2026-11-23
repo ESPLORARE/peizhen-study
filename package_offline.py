@@ -1,6 +1,6 @@
 """Create a self-contained offline HTML with the source PDF embedded."""
 from pathlib import Path
-import base64, zipfile
+import base64, zipfile, re
 root=Path(__file__).resolve().parent
 dist=root/'dist'
 html=(dist/'index.html').read_text(encoding='utf-8')
@@ -10,10 +10,10 @@ app=(dist/'app.js').read_text(encoding='utf-8')
 pdf=base64.b64encode((dist/'source.pdf').read_bytes()).decode('ascii')
 pdf_script="window.SOURCE_PDF_URL=URL.createObjectURL(new Blob([Uint8Array.from(atob('"+pdf+"'),c=>c.charCodeAt(0))],{type:'application/pdf'}));"
 html=html.replace('<link rel="stylesheet" href="styles.css">','<style>'+css+'</style>')
-html=html.replace('<link rel="stylesheet" href="ai.css">','<style>'+(dist/'ai.css').read_text(encoding='utf-8')+'</style>')
+html=re.sub(r'<link rel="stylesheet" href="ai\.css(?:\?[^\"]*)?">',lambda _: '<style>'+(dist/'ai.css').read_text(encoding='utf-8')+'</style>',html)
 html=html.replace('<script src="questions.js"></script>','<script>'+data.replace('</script','<\\/script')+'</script><script>'+pdf_script+'</script>')
 for name in ('ai-config.js','ai.js','app.js'):
-    html=html.replace('<script src="'+name+'"></script>','<script>'+(dist/name).read_text(encoding='utf-8').replace('</script','<\\/script')+'</script>')
+    html=re.sub(r'<script src="'+re.escape(name)+r'(?:\?[^\"]*)?"></script>',lambda _: '<script>'+(dist/name).read_text(encoding='utf-8').replace('</script','<\\/script')+'</script>',html)
 (dist/'offline.html').write_text(html,encoding='utf-8')
 (root.parent/'陪诊题库-离线版.html').write_text(html,encoding='utf-8')
 with zipfile.ZipFile(root.parent/'陪诊题库-完整源码.zip','w',zipfile.ZIP_DEFLATED) as z:
