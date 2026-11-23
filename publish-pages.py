@@ -14,7 +14,7 @@ def git(*args, cwd, capture=False, check=True):
 
 if not (DIST / 'index.html').is_file():
     raise SystemExit('Missing dist/index.html.')
-for name in ('app.js', 'questions.js'):
+for name in ('app.js', 'questions.js', 'ai.js', 'ai-config.js'):
     subprocess.run(['node', '--check', str(DIST / name)], check=True)
 
 with tempfile.TemporaryDirectory(prefix='peizhen-pages-') as temp:
